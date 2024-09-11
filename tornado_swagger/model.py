@@ -1,4 +1,6 @@
 """Models"""
+import pydantic
+
 from tornado_swagger._builders import build_swagger_docs
 
 
@@ -12,6 +14,8 @@ def _save_model_doc(model):
     """Save model docstring to _SwaggerModelsStore"""
     doc = model.__doc__
 
+    if isinstance(pydantic.BaseModel, model):
+        _SwaggerModelsStore.definitions[model.__name__] = model.model_json_schema()
     if doc is not None and "---" in doc:
         _SwaggerModelsStore.definitions[model.__name__] = build_swagger_docs(doc)
 
