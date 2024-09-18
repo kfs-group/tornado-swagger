@@ -55,7 +55,10 @@ def setup_swagger(
     api_definition_version: str = API_SWAGGER_2,
     allow_cors: bool = False,
 ):
-    """Inject swagger ui to application routes"""
+    """Inject swagger ui to application routes
+    :param schemes: list of server urls as specified in OpenAPI 3.0
+    :param api_base_url: key-value config pairs, where the values will be escaped in strings
+    :param security: list of tags with description"""
     swagger_schema = generate_doc_from_endpoints(
         routes,
         api_base_url=api_base_url,
@@ -85,5 +88,9 @@ def setup_swagger(
 
     with open(os.path.join(STATIC_PATH, "ui.html"), "r", encoding="utf-8") as f:
         SwaggerUiHandler.SWAGGER_HOME_TEMPLATE = (
-            f.read().replace("{{ SWAGGER_URL }}", _swagger_spec_url).replace("{{ DISPLAY_MODELS }}", str(-1 if not display_models else 1))
+            f
+            .read()
+            .replace("{{ SWAGGER_URL }}", _swagger_spec_url)
+            .replace("{{ DISPLAY_MODELS }}", str(-1 if not display_models else 1))
+            .replace("{{OPTIONS}}", ' '.join([f"{k} = '{v}'" for k,v in api_base_url.items()]))
         )

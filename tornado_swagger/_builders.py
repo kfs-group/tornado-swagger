@@ -242,8 +242,7 @@ class OpenApiDocBuilder(BaseDocBuilder):
                 "description": _clean_description(description),
                 "version": api_version,
             },
-            "basePath": api_base_url,
-            "schemes": schemes,
+            "servers": schemes,
             "components": {
                 "schemas": models,
                 "parameters": parameters,
@@ -254,9 +253,9 @@ class OpenApiDocBuilder(BaseDocBuilder):
         if contact:
             swagger_spec["info"]["contact"] = {"name": contact}
         if security_definitions:
-            swagger_spec["securityDefinitions"] = security_definitions
+            swagger_spec["components"]["securitySchemes"] = security_definitions
         if security:
-            swagger_spec["security"] = security
+            swagger_spec["tags"] = security
 
         return swagger_spec
 
