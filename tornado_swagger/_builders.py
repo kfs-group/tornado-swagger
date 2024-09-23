@@ -48,8 +48,8 @@ def build_swagger_docs(endpoint_doc: str):
 
 
 def _try_extract_doc(func):
-    """Extract docstring from origin function removing decorators"""
-    return inspect.unwrap(func).__doc__
+    """Extract the custom docstring from the function or fallback to original docstring."""
+    return getattr(inspect.unwrap(func), '__apidoc__', inspect.unwrap(func).__doc__)
 
 
 def _build_doc_from_func_doc(handler):
