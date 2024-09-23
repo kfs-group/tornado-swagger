@@ -15,7 +15,7 @@ def _save_model_doc(model):
     doc = model.__doc__
 
     if issubclass(model, pydantic.BaseModel):
-        _SwaggerModelsStore.definitions[model.__name__] = model.model_json_schema()
+        _SwaggerModelsStore.definitions[model.__name__] = model.model_json_schema(ref_template="#/components/schemas/{model}")
     elif doc is not None and "---" in doc:
         _SwaggerModelsStore.definitions[model.__name__] = build_swagger_docs(doc)
 
